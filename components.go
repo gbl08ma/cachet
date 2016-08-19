@@ -39,8 +39,8 @@ type Component struct {
 	StatusName  string `json:"status_name,omitempty"`
 }
 
-// ComponentWithStringStatus entity reflects a buggy version of Component
-type ComponentWithStringStatus struct {
+// componentWithStringStatus entity reflects a buggy version of Component
+type componentWithStringStatus struct {
 	Component
 	Status int `json:"status,omitempty,string"`
 }
@@ -60,10 +60,10 @@ type ComponentResponse struct {
 	Components []Component `json:"data,omitempty"`
 }
 
-// BuggyComponentResponse reflects a buggy version of the response of /components call
-type BuggyComponentResponse struct {
+// buggyComponentResponse reflects a buggy version of the response of /components call
+type buggyComponentResponse struct {
 	Meta       Meta                        `json:"meta,omitempty"`
-	Components []ComponentWithStringStatus `json:"data,omitempty"`
+	Components []componentWithStringStatus `json:"data,omitempty"`
 }
 
 // ComponentGroupResponse reflects the response of /components/groups call
@@ -91,7 +91,7 @@ type componentGroupAPIResponse struct {
 // Docs: https://docs.cachethq.io/docs/get-components
 func (s *ComponentsService) GetAll() (*ComponentResponse, *Response, error) {
 	u := "api/v1/components"
-	v := new(BuggyComponentResponse)
+	v := new(buggyComponentResponse)
 
 	resp, err := s.client.Call("GET", u, nil, v)
 
