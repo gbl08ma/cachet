@@ -29,7 +29,7 @@ type Component struct {
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
 	Link        string `json:"link,omitempty"`
-	Status      int    `json:"status,omitempty"`
+	Status      int    `json:"status,omitempty,string"`
 	Order       int    `json:"order,omitempty"`
 	Enabled     bool   `json:"enabled"`
 	GroupID     int    `json:"group_id,omitempty"`
