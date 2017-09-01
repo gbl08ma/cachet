@@ -29,7 +29,7 @@ type Component struct {
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
 	Link        string `json:"link,omitempty"`
-	Status      int    `json:"status,omitempty"`
+	Status      string `json:"status,omitempty"`
 	Order       int    `json:"order,omitempty"`
 	Enabled     bool   `json:"enabled"`
 	GroupID     int    `json:"group_id,omitempty"`
@@ -37,12 +37,6 @@ type Component struct {
 	UpdatedAt   string `json:"updated_at,omitempty"`
 	DeletedAt   string `json:"deleted_at,omitempty"`
 	StatusName  string `json:"status_name,omitempty"`
-}
-
-// componentWithStringStatus entity reflects a buggy version of Component
-type componentWithStringStatus struct {
-	Component
-	Status int `json:"status,omitempty,string"`
 }
 
 // ComponentGroup entity reflects one single component group
@@ -58,12 +52,6 @@ type ComponentGroup struct {
 type ComponentResponse struct {
 	Meta       Meta        `json:"meta,omitempty"`
 	Components []Component `json:"data,omitempty"`
-}
-
-// buggyComponentResponse reflects a buggy version of the response of /components call
-type buggyComponentResponse struct {
-	Meta       Meta                        `json:"meta,omitempty"`
-	Components []componentWithStringStatus `json:"data,omitempty"`
 }
 
 // ComponentGroupResponse reflects the response of /components/groups call
@@ -91,35 +79,10 @@ type componentGroupAPIResponse struct {
 // Docs: https://docs.cachethq.io/docs/get-components
 func (s *ComponentsService) GetAll() (*ComponentResponse, *Response, error) {
 	u := "api/v1/components"
-	v := new(buggyComponentResponse)
+	v := new(ComponentResponse)
 
 	resp, err := s.client.Call("GET", u, nil, v)
-
-	// turn the BuggyComponentResponse into a proper ComponentResponse
-	r := &ComponentResponse{
-		Meta: v.Meta,
-	}
-
-	components := []Component{}
-	for _, buggycomponent := range v.Components {
-		components = append(components, Component{
-			ID:          buggycomponent.ID,
-			Name:        buggycomponent.Name,
-			Description: buggycomponent.Description,
-			Link:        buggycomponent.Link,
-			Status:      buggycomponent.Status,
-			Order:       buggycomponent.Order,
-			Enabled:     buggycomponent.Enabled,
-			GroupID:     buggycomponent.GroupID,
-			CreatedAt:   buggycomponent.CreatedAt,
-			UpdatedAt:   buggycomponent.UpdatedAt,
-			DeletedAt:   buggycomponent.DeletedAt,
-			StatusName:  buggycomponent.StatusName,
-		})
-	}
-
-	r.Components = components
-	return r, resp, err
+	return v, resp, err
 }
 
 // Get return a single component.

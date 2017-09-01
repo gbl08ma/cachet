@@ -124,9 +124,9 @@ func (s *MetricsService) GetPoints(id int) (*[]Point, *Response, error) {
 // AddPoint adds a metric point to a given metric.
 //
 // Docs: https://docs.cachethq.io/docs/post-metric-points
-func (s *MetricsService) AddPoint(id int, value int, timestamp string) (*Point, *Response, error) {
+func (s *MetricsService) AddPoint(id int, value int, timestamp string) (*[]Point, *Response, error) {
 	u := fmt.Sprintf("api/v1/metrics/%d/points", id)
-	v := new(metricPointAPIResponse)
+	v := new(metricPointsAPIResponse)
 
 	p := struct {
 		Value     int    `json:"value"`
